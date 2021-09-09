@@ -1,0 +1,47 @@
+#include <iostream>
+#include <thread>
+#include <locale.h>
+
+using namespace std;
+
+static bool trwanie = false;
+
+void liczenie() 
+{
+    using namespace literals::chrono_literals;
+    int sekundy = 0, minuty = 0, godziny = 0;
+
+    system("cls");
+    cout << "rozpoczęło sie zliczanie czasu pracy, aby zakonczyć pracę kliknij enter " << endl;
+
+    while (!trwanie)
+    {
+        sekundy += 1;
+        if (sekundy == 60)
+        {
+            minuty++;
+            sekundy = 0;
+        }
+        else if (minuty == 60)
+        {
+            godziny++;
+            minuty = 0;
+        }
+        this_thread::sleep_for(1s);
+    }
+    cout << "przepracowales " << minuty << " minut i " << godziny << " godzin" << endl;
+}
+
+int main()
+{
+    setlocale(LC_ALL, "pl_PL");
+    cout << "POMIAR CZASU" << endl << "kliknij dowolny przycisk by kontynuować" << endl;
+    system("pause");
+
+    thread zliczanie(liczenie);
+    cin.get();
+    trwanie = true;
+    zliczanie.join();
+
+    system("pause");
+}
